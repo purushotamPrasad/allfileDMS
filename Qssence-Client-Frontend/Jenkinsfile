@@ -1,0 +1,97 @@
+def COLOR_MAP = [
+    'FAILURE' : 'danger',
+    'SUCCESS' : 'good'
+]
+
+pipeline {
+    agent any
+    
+    tools {nodejs 'node20'}
+    
+    environment {
+        NODE_VERSION = '20'
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'github-access-token', url: 'https://github.com/VED-Software/Qssence-Client-Frontend.git'
+            }
+        }
+        
+        
+        stage('SonarQube Quality Analysis') {
+            steps {
+                
+                withSonarQubeEnv('sonar') {
+                    
+                sh "${tool('sonar')}/bin/sonar-scanner  -Dsonar.projectKey=Qssence-superadmin-frontend  -Dsonar.projectName=Qssence-superadmin-frontend"
+                }
+            }
+        }
+       
+        stage('Docker Build & Tag') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        
+                        // Stop and remove any running containers using the old image
+                        sh '''
+                        docker ps -q --filter "name=client" | xargs -r docker stop
+                        docker build -t rajat545/client:latest .
+                        docker push rajat545/client:latest
+                        docker images -f "dangling=true" -q | xargs -r docker rmi -f
+                        '''
+        
+                    }     
+                   
+                }
+            }
+        }
+        
+        stage('Trivy Image Scan') {
+            steps {
+                 sh "trivy image --format table -o fs-report.html rajat545/superadmin:latest"
+            }
+        }
+        
+        stage('Docker Deploy') {
+            steps {
+                script {
+                    def containerName = 'client'
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh '''
+                        docker stop client 2>/dev/null || true
+                        
+                        docker rm client 2>/dev/null || true
+                        docker run --name client -d -p 3002:3002 rajat545/client:latest
+                        '''
+                    }     
+                   
+                }
+            }
+        }
+        
+    }
+    
+    post {
+    
+    success {
+            slackSend(channel: '#build-notification-status', message: "Build #${env.BUILD_NUMBER} succeeded! :tada:")
+    }
+        
+    failure {
+            slackSend(channel: '#build-notification-status', message: "Build #${env.BUILD_NUMBER} failed! :x:")
+        
+    }
+        
+    always {
+        echo 'Slack Notifications'
+        slackSend (
+            channel: '#build-notification-status',  
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} \n build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        )
+    }
+}      
+}

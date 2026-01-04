@@ -1,0 +1,84 @@
+#server:
+#  port: 8085
+#
+#spring:
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: bitugpt619@gmail.com
+#    password: eyuz gjum ohve gblw
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/subscriptiondb
+#    username: postgres
+#    password: root
+#    driver-class-name: org.postgresql.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#
+#  application:
+#    name: subscription-panel
+#
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+#
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
+#
+#
+server:
+  port: ${SERVER_PORT:8085}
+
+spring:
+  application:
+    name: subscription-panel
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bitugpt619@gmail.com
+    password: eyuz gjum ohve gblw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:postgres}:${POSTGRES_PORT:5432}/subscriptiondb
+    username: ${POSTGRES_USER:keycloak}
+    password: ${POSTGRES_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://discovery-server:8761/eureka/}
+
+logging:
+  level:
+    org.springframework.security: INFO
+

@@ -1,0 +1,97 @@
+def COLOR_MAP = [
+    'FAILURE' : 'danger',
+    'SUCCESS' : 'good'
+]
+
+pipeline {
+    agent any
+    
+    tools {nodejs 'node20'}
+    
+    environment {
+        NODE_VERSION = '20'
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'github-access-token', url: 'https://github.com/VED-Software/Qssence_Subcriptionpanel_Frontend.git'
+            }
+        }
+        
+       /* stage("Install package & Dependencies") {
+            steps {
+                sh ''' npm install -g npm
+                       npm install -g pnpm
+                       pnpm install --no-frozen-lockfile
+                    '''
+            }
+        } */
+        
+        
+        stage('SonarQube Quality Analysis') {
+            steps {
+                
+                withSonarQubeEnv('sonar') {
+                    
+                sh "${tool('sonar')}/bin/sonar-scanner  -Dsonar.projectKey=Qssence-superadmin-frontend  -Dsonar.projectName=Qssence-superadmin-frontend"
+                }
+            }
+        }
+       
+        stage('Docker Build & Tag') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh "docker build -t rajat545/superadmin:latest ."
+                        sh "docker push rajat545/superadmin:latest"
+                    }     
+                   
+                }
+            }
+        }
+        
+        stage('Trivy Image Scan') {
+            steps {
+                 sh "trivy image --format table -o fs-report.html rajat545/superadmin:latest"
+            }
+        }
+        
+        stage('Docker Deploy') {
+            steps {
+                script {
+                    def containerName = 'superadmin'
+                    //if (sh(script: "docker ps -q -f name=${containerName}", returnStdout: true).trim())
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh "docker stop ${containerName}"
+                        sh "docker rm ${containerName}"
+                        sh "docker run --name superadmin -d -p 3003:3003 rajat545/superadmin:latest"
+                    }     
+                   
+                }
+            }
+        }
+        
+    }
+    
+    post {
+    
+    success {
+            slackSend(channel: '#build-notification-status', message: "Build #${env.BUILD_NUMBER} succeeded! :tada:")
+    }
+        
+    failure {
+            slackSend(channel: '#build-notification-status', message: "Build #${env.BUILD_NUMBER} failed! :x:")
+        
+    }
+        
+    always {
+        echo 'Slack Notifications'
+        slackSend (
+            channel: '#build-notification-status',  
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} \n build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        )
+    }
+}    
+}

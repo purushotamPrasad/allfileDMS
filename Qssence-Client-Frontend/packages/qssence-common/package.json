@@ -1,0 +1,37 @@
+{
+  "name": "qssence-common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.17",
+    "@mui/x-data-grid": "^6.19.8",
+    "@mui/x-data-grid-generator": "^6.19.8",
+    "@mui/x-date-pickers": "^7.3.2",
+    "@tabler/icons": "^2.47.0",
+    "@tabler/icons-react": "^2.47.0",
+    "dayjs": "^1.11.11",
+    "next": "14.1.0",
+    "prop-types": "^15.8.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-helmet-async": "^2.0.4",
+    "react-resizable": "^3.0.5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/prop-types": "^15.7.11",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
+    "@types/react-resizable": "^3.0.7",
+    "typescript": "^5"
+  }
+}

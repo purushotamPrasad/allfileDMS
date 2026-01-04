@@ -1,0 +1,18 @@
+services:
+  qssence-admin:
+    build:
+      context: .
+      target: qssence-admin
+    env_file:
+      - ./packages/qssence-admin/.env
+    ports:
+      - "3001:3001"
+
+  qssence-dms:
+    build:
+      context: .
+      target: qssence-dms
+    env_file:
+      - ./packages/qssence-admin/.env
+    ports:
+      - "3002:3002"

@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+
+  qssence-client-dms:
+    container_name: qssence-client-dms
+    build:
+      context: ./Qssence-Client-Frontend
+    env_file:
+      - ./Qssence-Client-Frontend/packages/qssence-dms/.env
+    ports:
+      - "3002:3002"
+    restart: always
+    networks:
+      - dms-net
+
+  qssence-admin-panel:
+    container_name: qssence-admin-panel
+    build:
+      context: ./Qssence_Adminpanel_Frontend
+    env_file:
+      - ./Qssence_Adminpanel_Frontend/packages/qssence-admin/.env
+    ports:
+      - "3001:3001"
+    restart: always
+    networks:
+      - dms-net
+
+  qssence-superadmin:
+    container_name: qssence-superadmin
+    build:
+      context: ./Qssence_Subcriptionpanel_Frontend
+    env_file:
+      - ./Qssence_Subcriptionpanel_Frontend/packages/qssence-superadmin/.env
+    ports:
+      - "3003:3003"
+    restart: always
+    networks:
+      - dms-net
+networks:
+  dms-net:
+    external: true
+

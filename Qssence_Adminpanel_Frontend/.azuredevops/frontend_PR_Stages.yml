@@ -1,0 +1,45 @@
+
+trigger: none
+
+pool:
+  name: Default
+variables:
+  start_port: 3001 # Start of port range
+  end_port: 3100 # End of port range
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildAdmin
+    displayName: 'Build and Archive Admin'
+    steps:
+    - checkout: self
+      persistCredentials: true
+    - script: |
+        # Check if the latest Docker image tag exists
+        if docker images qssence-frontend:latest | grep qssence-frontend >/dev/null; then
+          # If the latest image exists, tag it with the older version number
+          docker tag qssence-frontend:latest qssence-frontend:older_version
+        fi
+      displayName: 'Check and tag existing image'
+    - script: |
+        docker build -t qssence-frontend .
+      displayName: 'Build Latest Qssence-Frontend Docker Image'
+    - script: |
+        docker ps -a
+      displayName: 'List all docker running containers'
+    - script: |
+        IMAGE_ID_OLDER=$(docker images | grep 'qssence-frontend[[:space:]]*older_version' | awk '{print $3}')
+        echo "Image ID of older version image: $IMAGE_ID_OLDER"
+
+        CONTAINER_ID=$(docker ps -a | grep $IMAGE_ID_OLDER | awk '{print $1}')
+        echo "Container ID: $CONTAINER_ID"
+
+        docker stop $CONTAINER_ID
+        docker remove $CONTAINER_ID
+        docker run -d -p 3001:3001 -p 3002:3002 qssence-frontend:latest
+      displayName: 'Start latest container and remove older'
+    - script: |
+        docker rmi qssence-frontend:older_version
+      displayName: 'Stop and remove old image' 

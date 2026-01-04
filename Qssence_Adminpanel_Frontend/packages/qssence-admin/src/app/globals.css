@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} */
+
+.header_title
+{
+   font-size: 20px;
+   line-height: 24px;
+   font-weight: 600;
+   cursor: pointer;
+}
+.MuiDataGrid-actionsCell
+{
+   display: flex;
+   grid-gap:0px !important
+}
+.paddingBlock
+{
+  padding-block: 16px;
+}
+.MuiTab-root.Mui-selected
+{
+  color:rgba(11, 74, 111, 1) !important
+}
+.MuiTabs-indicator
+{
+  background-color:rgba(11, 74, 111, 1) !important
+}
+.MuiButtonBase-root
+{
+   text-transform: capitalize !important;
+}
+.primary_color{
+  color:rgba(11, 74, 111, 1) !important
+}
+.MuiChip-deleteIcon
+{
+  color:#fff !important;
+}
+
+.license_key {
+   font-size: 16px;
+   padding-bottom: 40px;
+}
+
+button [type="submit"]
+{
+   background-color: rgba(11, 74, 111, 1) !important;
+   color: #fff !important;
+}
+.secondary
+{
+  background-color:#fff !important;
+  color:rgba(11, 74, 111, 1) !important;
+  border:1px solid rgba(11, 74, 111, 1) !important;
+}
+
+.MuiDataGrid-root .MuiDataGrid-withBorderColor
+{
+  border-color: rgba(11, 74, 111, 1) !important;
+}
+.MuiDataGrid-withBorderColor{
+  border-color: rgba(224, 224, 224, 1) !important;
+} 
+
+.MuiDataGrid-columnHeaderTitle
+{
+  font-weight:600 !important;
+  font-size: 14px !important;
+}
+
+.MuiListItemIcon-root
+{
+  padding-left: 0px !important;
+}
+
+.MuiList-root
+{
+  padding-top: 0px !important;
+}
+
+.top_right_position
+{
+   position: absolute;
+   padding: 16px 0px;
+   top:0px;
+   right: 8px;
+   cursor: pointer;
+}
+
+.page_heading
+{
+   width:120px;
+   font-size: 16px;
+}
+
+.title_heading
+{
+  width:160px;
+  font-size: 16px;
+}
+
+.page_title
+{
+   font-size: 14px;
+   font-weight: 400;
+}
+
+.MuiTableCell-root
+{
+   border: 1.5px solid rgba(11, 74, 111, 1) !important;
+   vertical-align: top !important;
+}
+
+.MuiTableCell-head
+{
+   font-size: 14px !important;
+   font-weight: 600 !important;
+   text-align: center !important;
+}
+
+.MuiDataGrid-overlay
+{
+   font-size:16px !important;
+}
+.config{
+  border: 1px solid rgba(11, 74, 111, 1) !important;
+  border-radius: 4px;
+  padding: 20px;
+  display: grid;
+  grid-row-gap: 8px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+}

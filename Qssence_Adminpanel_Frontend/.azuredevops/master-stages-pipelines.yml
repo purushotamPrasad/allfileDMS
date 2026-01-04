@@ -1,0 +1,48 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+
+trigger:
+- main
+
+pool:
+  name: Default
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
+    steps:
+    - checkout: self
+    - script: |
+        pnpm install
+        pnpm build-all
+      displayName: 'Build ALL Applications'
+
+- stage: Deploy
+  displayName: Deploy to VPS
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+  - deployment: DeployJob
+    environment: 
+      name: 'Production'
+      resourceType: 'VirtualMachine'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - download: current
+            artifact: drop
+          - task: SSH@0
+            inputs:
+              sshEndpoint: 'VPSConnection'  # The name of your service connection
+              runOptions: 'commands'
+              commands: |
+                rsync -avz --delete $(Build.ArtifactStagingDirectory)/ root@46.28.44.11:/root/qssence/production/
+
+                cd /root/qssence/production/
+                pnpm install
+                pm2 restart qssence-production
+

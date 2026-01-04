@@ -1,0 +1,10 @@
+services:
+  qssence-superadmin:
+    build:
+      context: .
+      target: qssence-superadmin
+    env_file:
+      - ./packages/qssence-superadmin/.env
+    ports:
+      - "3003:3003"
+
