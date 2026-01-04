@@ -43,8 +43,8 @@ public class AuthController {
             APIError error = new APIError();
             error.setError_code(4000);
             error.setError_name("INVALID_REQUEST");
-            error.setError_description("Invalid Username or Password.");
-            LoginRequestEvent loginEvent = new LoginRequestEvent("Login attempt failed: Invalid Username or Password", "failure", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getUsername());
+            error.setError_description("Invalid Email or Password.");
+            LoginRequestEvent loginEvent = new LoginRequestEvent("Login attempt failed: Invalid Email or Password", "failure", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getEmail());
             authProducer.sendMessage(loginEvent);
             return ResponseEntity.badRequest().body(error);
         }
@@ -52,8 +52,8 @@ public class AuthController {
             APIError error = new APIError();
             error.setError_code(4010);
             error.setError_name("UNAUTHORIZED_ACCESS");
-            error.setError_description("Invalid Username or Password.");
-            LoginRequestEvent loginEvent = new LoginRequestEvent("Login attempt failed: Unauthorized Access", "failure", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getUsername());
+            error.setError_description("Invalid Email or Password.");
+            LoginRequestEvent loginEvent = new LoginRequestEvent("Login attempt failed: Unauthorized Access", "failure", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getEmail());
             authProducer.sendMessage(loginEvent);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
@@ -62,11 +62,11 @@ public class AuthController {
             error.setError_code(4040);
             error.setError_name("NOT_FOUND");
             error.setError_description("User is not registered.");
-            LoginRequestEvent loginEvent = new LoginRequestEvent("Login attempt failed: User not registered.", "failure", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getUsername());
+            LoginRequestEvent loginEvent = new LoginRequestEvent("Login attempt failed: User not registered.", "failure", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getEmail());
             authProducer.sendMessage(loginEvent);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
-        LoginRequestEvent loginEvent = new LoginRequestEvent("User login successful.", "success", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getUsername());
+        LoginRequestEvent loginEvent = new LoginRequestEvent("User login successful.", "success", LocalDateTime.now(), request.getRemoteAddr(),loginRequest.getEmail());
 
         authProducer.sendMessage(loginEvent);
         System.out.println("Action of Login User is :-"+loginEvent);

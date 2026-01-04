@@ -60,7 +60,7 @@ public class LoginService implements IAuthService {
         map.add("client_secret", clientSecret);
         map.add("grant_type", "password");
         map.add("scope", scope);
-        map.add("username", loginRequest.getUsername());
+        map.add("username", loginRequest.getEmail());
         map.add("password", loginRequest.getPassword());
 
 
