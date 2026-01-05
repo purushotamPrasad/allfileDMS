@@ -20,17 +20,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        // Hardcoded credentials
-        final String hardcodedEmail = "admin@example.com";
-        final String hardcodedPassword = "admin123";
-        final String hardcodedRole = "admin";
+        // Hardcoded credentials - restored to original username-based
+        final String hardcodedUsername = "admin";
+        final String hardcodedPassword = "QssenceAdmin990";
 
-        if (hardcodedEmail.equals(loginRequest.getEmail()) &&
+        if (hardcodedUsername.equals(loginRequest.getUsername()) &&
                 hardcodedPassword.equals(loginRequest.getPassword())) {
 
             // Generate access and refresh tokens
-            String accessToken = jwtUtil.generateToken(hardcodedEmail, hardcodedRole);
-            String refreshToken = jwtUtil.generateRefreshToken(hardcodedEmail);
+            String accessToken = jwtUtil.generateToken(hardcodedUsername, "admin");
+            String refreshToken = jwtUtil.generateRefreshToken(hardcodedUsername);
 
             return ResponseEntity.ok(Map.of(
                     "accessToken", accessToken,
@@ -39,7 +38,7 @@ public class AuthController {
                     "refreshTokenExpiresAt", jwtUtil.getRefreshTokenExpiration()
             ));
         } else {
-            return ResponseEntity.status(401).body("Invalid email or password");
+            return ResponseEntity.status(401).body("Invalid username or password");
         }
     }
 
